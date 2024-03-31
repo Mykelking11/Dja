@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>User Room Preference</title>
+</head>
+
+<body>
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'home' %}">Logo</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="mynavbar">
+                        <ul class="navbar-nav me-auto">
+                            <!-- <li class="nav-item">
+                                <a class="nav-link" href="{% url 'home' %}">HOTEL</a>
+                            </li> -->
+                            {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                            </li>
+                            {% endif %}
+                            {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'preference' %}">Preference</a>
+                            </li>
+                            {% endif %}
+                            {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'reservation' %}">Reservation</a>
+                            </li>
+                            {% endif %}
+                            {% if not request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                            </li>
+                            {% endif %}
+                            {% if not request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{%url 'login' %}">Login</a>
+                            </li>
+                            {% endif %}
+                            {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{%url 'logout' %}">Logout</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body text-center">
+                            <img src={{details.profile_pic.url}} alt="avatar" class="rounded-circle img-fluid"
+                                style="width: 150px;">
+                            <h5 class="my-3">{{details.firstname}} {{details.lastname}}</h5>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Full Name</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">{{details.firstname}} {{details.lastname}}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">{{details.email}}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Phone</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">{{details.phone_number}}</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">D.O.B</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">{{details.birth_date}}</p>
+                                </div>
+                            </div>
+                            <hr>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-body p-md-5 mx-md-4 ">
+                            <form method="POST" action="{% url 'preference' %}">
+                                {% csrf_token %}
+                                <p>Create Your Room Preference</p>
+
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="email">Lighting</label>
+                                    <select class="form-control form-control-sm" id="Lighting" name="Lighting">
+                                        <option>Chandelier</option>
+                                        <option>Pendant Light</option>
+                                        <option>Track Light</option>
+                                        <option>Cabinet Light</option>
+                                        <option>Ceiling Light</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="email">Bedspread</label>
+                                    <select class="form-control form-control-sm" id="Bedspread" name="Bedspread">
+                                        <option>Quilts,Coverlets,Blankets,Throwers,3-Pillows</option>
+                                        <option>Coverlets,Blankets,Throwers,3-Pillows</option>
+                                        <option>Coverlets,Blankets,2-Pillows</option>
+                                        <option>Coverlets,Throwers,3-Pillows</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-outline mb-4" class="form-check">
+                                    <label class="form-label" for="heater">Heater</label>
+                                    <select class="form-control form-control-sm" id="heater" name="heater">
+                                        <option>True</option>
+                                        <option>False</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-outline mb-4" class="form-check">
+                                    <label class="form-label" for="airconditioner">Air Conditioner</label>
+                                    <select class="form-control form-control-sm" id="airconditioner"
+                                        name="airconditioner">
+                                        <option>True</option>
+                                        <option>False</option>
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                                    type="submit">Create Preference
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+</body>
+
+</html>
