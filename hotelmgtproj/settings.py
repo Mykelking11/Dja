@@ -22,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-36u(3+n62gaejxsol=6e6uhurpi*5h&67os0dh1lm(v%bn7ic+'
-
+SECRET_KEY = os.getenv(SECRET_KEY)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -187,14 +186,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-# AWS_ACCESS_KEY_ID = "AKIAVJFAKD4DR4E4PB4R"
-# AWS_SECRET_ACCESS_KEY = "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"
-# AWS_STORAGE_BUCKET_NAME = "ryvm-django-bucket"
 
-# AWS_QUERYSTRING_AUTH = False
-# AWS_S3_FILE_OVERWRITE = False
-
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=25),
@@ -204,8 +196,7 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": True,
 
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": 'django-insecure-36u(3+n62gaejxsol=6e6uhurpi*5h&67os0dh1lm(v%bn7ic+',
-    # settings.SECRET_KEY,
+    "SIGNING_KEY": os.getenv(SECRET_KEY),
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,
