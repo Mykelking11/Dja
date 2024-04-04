@@ -9,7 +9,7 @@ from guestpreferenceapp.models import *
 # Register your models here.
 class ReservedRoomsAdmin(admin.StackedInline):
     model = ReservedRooms
-    def formfield_for_foreignkey(self, db_field: ForeignKey[ReservedRooms], request: HttpRequest | None, **kwargs: Any) -> ModelChoiceField | None:
+    def formfield_for_foreignkey(self, db_field: ForeignKey[ReservedRooms], request: HttpRequest, **kwargs: Any) -> ModelChoiceField:
         if db_field.name=='room':
             kwargs["queryset"]= RoomModel.objects.filter(status='Free')
             return super().formfield_for_foreignkey(db_field, request, **kwargs)
@@ -19,7 +19,7 @@ class ReservedRoomsAdmin(admin.StackedInline):
 @admin.register(ReservationModel)
 class ReservationModelAdmin(admin.ModelAdmin):
     inlines = [ReservedRoomsAdmin]
-    def formfield_for_foreignkey(self, db_field: ForeignKey[ReservationModel], request: HttpRequest | None, **kwargs: Any) -> ModelChoiceField | None:
+    def formfield_for_foreignkey(self, db_field: ForeignKey[ReservationModel], request: HttpRequest, **kwargs: Any) -> ModelChoiceField:
         if db_field.name=='preference':
             kwargs["queryset"]= Preferencemodel.objects.filter(user=request.user)
     

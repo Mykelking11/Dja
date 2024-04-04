@@ -11,7 +11,7 @@ from reservation.models import ReservationModel
 @admin.register(CheckoutModel)
 class CheckoutModelAdmin(admin.ModelAdmin):
     
-    def formfield_for_foreignkey(self, db_field: ForeignKey[CheckoutModel], request: HttpRequest | None, **kwargs: Any) -> ModelChoiceField | None:
+    def formfield_for_foreignkey(self, db_field: ForeignKey[CheckoutModel], request: HttpRequest, **kwargs: Any) -> ModelChoiceField:
         if db_field.name=='reservation':
             kwargs["queryset"]= ReservationModel.objects.filter(user=request.user)
       

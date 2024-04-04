@@ -10,7 +10,7 @@ from Customeruser.models import CustomBaseuser
 
 @admin.register(Preferencemodel)
 class PreferenceModelAdmin(admin.ModelAdmin):
-    def formfield_for_foreignkey(self, db_field: ForeignKey[Preferencemodel], request: HttpRequest | None, **kwargs: Any) -> ModelChoiceField | None:
+    def formfield_for_foreignkey(self, db_field: ForeignKey[Preferencemodel], request: HttpRequest, **kwargs: Any) -> ModelChoiceField:
         if db_field.name=='user':
             kwargs["queryset"]= CustomBaseuser.objects.filter(id=request.user.id)
             return super().formfield_for_foreignkey(db_field, request, **kwargs)
