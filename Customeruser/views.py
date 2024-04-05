@@ -40,9 +40,10 @@ def profile_view(request):
             print('valid')
             print(form.cleaned_data.get('profile_pic'))
             userr.set_password(pwd)
-            userr.profile_pic = request.POST.get('profile_pic')
+            userr.profile_pic.url = request.POST.get('profile_pic')
             userr.birth_date = request.POST.get('birth_date')
             form.save(commit=True)
+            userr.save(commit=True)
             return redirect('home')
     if request.method == "POST" and request.POST.get('type') == 'delete':
         print('in')
