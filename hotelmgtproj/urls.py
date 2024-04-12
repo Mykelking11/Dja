@@ -32,11 +32,13 @@ urlpatterns = [
 
     path('login/', login_view, name='login'),
     path('success/', success_view, name='success'),
+    path('dashboard/', dashboard, name='dashboard'),
     path('logout/', logout_view, name='logout'),
     path('profile/', profile_view, name='profile'),
     path('preference/', http_preference, name='preference'),
     path('payment/', payment, name='payment'),
     path('reservation/', reservation, name='reservation'),
+    path('reservation/<int:id>/', reservation_id, name='reservation_id'),
     path('signup/', signup_view, name='signup'),
     path('', home_view, name='home'),
 
