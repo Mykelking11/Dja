@@ -21,8 +21,12 @@ from .decorators import authenticate_user
 from .models import *
 from .serializer import *
 from .tasks import *
-from .form import create_customer,update_customer
+from .form import create_customer,update_customer,update_picture
 from roomapp.models import *
+from django.core.files import File
+from reservation.models import *
+import datetime
+
 
 def home_view(request):
     free_rooms =RoomModel.objects.filter(status='Free')
@@ -30,28 +34,52 @@ def home_view(request):
     return render(request, 'home.html', context)
 
 @login_required(login_url='login')
+def dashboard(request):
+    userr=CustomBaseuser.objects.get(email=request.user.email)
+    reservations = ReservationModel.objects.filter(user=userr)
+    count=reservations.count()
+    context={'reservations':reservations,'count':count,'user':userr}
+    return render(request,'dashboard.html',context)
+
+@login_required(login_url='login')
 def profile_view(request):
     userr=CustomBaseuser.objects.get(email=request.user.email)
-    form = update_customer(request.POST,instance=userr)
-    if request.method == "POST" and request.POST.get('type') == 'update':
-        pwd=request.POST.get('password')
-        form = update_customer(request.POST,instance=userr)
-        if form.is_valid():
+    update_customer_form = update_customer(request.POST,instance=userr)
+    update_picture_form = update_picture(request.POST,request.FILES,instance=userr)
+    if request.method == "POST" and request.POST.get('type')=='update_picture':
+        print(update_picture_form.data)
+        update_picture_form = update_picture(request.POST,request.FILES,instance=userr)
+        if update_picture_form.is_valid():
+            print('pic')
+            update_picture_form.save(commit=True)
+
+    if request.method == "POST" and request.POST.get('type') == 'update_user_info':
+        # pwd=request.POST.get('password')
+        
+        if update_customer_form.is_valid():
             print('valid')
-            print(form.cleaned_data.get('profile_pic'))
-            userr.set_password(pwd)
-            userr.profile_pic.url = request.POST.get('profile_pic')
-            userr.birth_date = request.POST.get('birth_date')
-            form.save(commit=True)
-            userr.save(commit=True)
-            return redirect('home')
+            # userr.set_password(pwd)
+            update_customer_form.save(commit=True)
+            print(userr.firstname)
+    if request.method == "POST" and request.POST.get('type') == 'update_password':
+        current_pwd=request.POST.get('password')
+        new_pwd = request.POST.get('new_password')
+        check = userr.check_password(current_pwd)
+        print(check)
+        if check == True:
+            userr.set_password(new_pwd)
+            userr.save()
+        
+
     if request.method == "POST" and request.POST.get('type') == 'delete':
         print('in')
         userr=CustomBaseuser.objects.get(email=request.user.email)
         userr.delete()
         request.user.delete()
-        return redirect('home')
-    context={'form': form,'details':request.user}
+        
+    context={'details':request.user,
+             'update_picture_form':update_picture_form,
+             'update_customer_form':update_customer_form,}
     return render(request, 'Profile.html', context)
 
 @authenticate_user
@@ -62,7 +90,7 @@ def signup_view(request):
                                          request.POST.get('firstname'),
                                          request.POST.get('lastname'),
                                          request.POST.get('password'))
-        return redirect('login')
+        return redirect('dashboard')
     context = {'form':form,'None':''}
     return render(request, 'signup.html', context)
 
@@ -74,9 +102,10 @@ def login_view(request):
         user = authenticate(request, email=email, password=password)
         if user != None: 
             login(request, user)
-            return redirect('home')
+            messages.success(request,"Successful Login")
+            return redirect('dashboard')
         else:
-            messages.info(request, "Username OR Password is incorrect") #you dont need to pass through context
+            messages.error(request, "Username OR Password is incorrect") #you dont need to pass through context
     context = {}
     return render(request, 'login.html', context)
 
